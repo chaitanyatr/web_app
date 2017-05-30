@@ -10,69 +10,66 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.java.bn.PersonalInfoBean;
+import com.java.bn.BankInfoBean;
 
 
-public class PersonalInfo extends HttpServlet {
+public class BankInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//Step-1
-		PersonalInfoBean pInfoBean=new PersonalInfoBean();
-		String fName=request.getParameter("firstname");
-		String mName=request.getParameter("middlename");
-		String lName=request.getParameter("lastname");
-		String gen=request.getParameter("gender");
-		pInfoBean.setFirstName(fName);
-		pInfoBean.setMiddleName(mName);
-		pInfoBean.setLastName(lName);
+		BankInfoBean bInfoBean=new BankInfoBean();
+		String bank_Name=request.getParameter("bankID");
+		String acc_Num=request.getParameter("accID");
+		String ssn_Num=request.getParameter("ssnID");
+		bInfoBean.setBankName(bank_Name);
+		bInfoBean.setAccountNum(acc_Num);
+		bInfoBean.setSsn(ssn_Num);
 		
 		//Step-2
 		//2a-validations
 		String errors="";
-		if(checkFieldBlank(fName)){
-			errors += "First name is blank";
+		if(checkFieldBlank(bank_Name)){
+			errors += "Bank name is blank";
 		}
-		if(checkFieldBlank(mName)){
-			errors += "middle name is blank";
+		if(checkFieldBlank(acc_Num)){
+			errors += "Account is blank";
 		}
-		if(checkFieldBlank(lName)){
-			errors += "Last name is blank";
+		if(checkFieldBlank(ssn_Num)){
+			errors += "Ssn is blank";
 		}
 		
 		String msg="";
-		if(checkLength(fName)){
-			msg +="First name is less than 2 charecters";
+		if(checkLength(bank_Name)){
+			msg +="Bank name is less than 2 charecters";
 		}
-		if(checkLength(mName)){
-			msg +="Middle name is less than 2 charecters";
+		if(checkLength(acc_Num)){
+			msg +="Account no is less than 2 charecters";
 		}
-		if(checkLength(lName)){
-			msg +="Last name is less than 2 charecters";
+		if(checkLength(ssn_Num)){
+			msg +="Ssn no is less than 2 charecters";
 		}
 		
-		
-		//2b-db interaction
-		
+	
+		//Step-3 Respond back
+	
 		if(checkFieldBlank(errors) && checkLength(msg)){
 		HttpSession ses=request.getSession();
-		ses.setAttribute("pinfo1",pInfoBean);
+		ses.setAttribute("binfo1", bInfoBean);
 		
-		response.sendRedirect("html/contactinfo.html");
-		}
-	
-		else if(checkFieldBlank(errors)) {
+		response.sendRedirect("jsp/beanoutput.jsp");
+		
+	}	else if(checkFieldBlank(errors)){
 		request.setAttribute("msg", msg);
-		RequestDispatcher rd=request.getRequestDispatcher("jsp/personal2.jsp");
+		RequestDispatcher rd=request.getRequestDispatcher("jsp/bank2.jsp");
+		rd.forward(request, response);
+	}	else{
+		request.setAttribute("errors", errors);
+		RequestDispatcher rd=request.getRequestDispatcher("jsp/bank.jsp");
 		rd.forward(request, response);
 	}
-		else{
-			request.setAttribute("errors", errors);
-			RequestDispatcher rd=request.getRequestDispatcher("jsp/personal.jsp");
-			rd.forward(request, response);
-		}
-		
 	}
 	
 	private boolean checkLength(String val) {
@@ -84,4 +81,3 @@ public class PersonalInfo extends HttpServlet {
 	}
 
 }
-
