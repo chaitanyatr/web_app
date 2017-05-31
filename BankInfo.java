@@ -28,7 +28,7 @@ public class BankInfo extends HttpServlet {
 		bInfoBean.setAccountNum(acc_Num);
 		bInfoBean.setSsn(ssn_Num);
 		
-		//Step-2
+		//Step-2 added chaitanya
 		//2a-validations
 		String errors="";
 		if(checkFieldBlank(bank_Name)){
